@@ -1,9 +1,23 @@
-function App() {
-  return (
-    <div className="text-3xl font-bold underline text-green-400">
-      Hello there
-    </div>
-  )
-}
+import React from "react";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import InfoForm from "./components/ui/InfoForm/InfoForm";
+import QRCodePage from "./components/ui/QrCode/QrCode";
 
-export default App
+const App: React.FC = () => {
+  return (
+    <Router>
+      <Routes>
+        {/* Route for QR Code */}
+        <Route path="/" element={<QRCodePage />} />
+
+        {/* Route for the Form */}
+        <Route path="/form/:organizationId" element={<InfoForm />} />
+
+        {/* Redirect unknown routes to QR code page */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;
