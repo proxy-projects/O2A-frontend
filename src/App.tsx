@@ -1,13 +1,8 @@
-import LoginForm from "./pages/auth/LoginForm"
-import SignUpForm from "./pages/auth/SignupForm"
-// import SignUpForm from "./pages/auth/SignupForm"
+import Auth from "./pages/auth/Auth"
 
 function App() {
   return (
-   <>
-    <LoginForm/>
-    <SignUpForm/>
-   </>
+  <Auth/>
   )
 }
 
