@@ -3,7 +3,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Button from "../../components/ui/Button/Button";
 import Input from "../../components/ui/Input/Input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { UserAuth } from "../../context/AuthContext";
 
 const loginSchema = z.object({
   email: z.string().email("Provide a valid email address"),
@@ -19,6 +20,7 @@ const loginSchema = z.object({
 type LoginData = z.infer<typeof loginSchema>;
 
 function Login() {
+  const navigate = useNavigate();
   const {
     control,
     handleSubmit,
@@ -30,11 +32,17 @@ function Login() {
       password: "",
     },
   });
+  const {session, login, isLoading} = UserAuth()
+  console.log(session)
 
   const onSubmit = async (data: LoginData) => {
     try {
-      console.log(data);
-      // Add your login logic here
+      const result =  await login(data.email, data.password);
+
+      if(result.success) {
+        navigate('/dashboard')
+      }
+
     } catch (error) {
       console.error("Login failed:", error);
     }
