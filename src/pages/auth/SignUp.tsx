@@ -46,8 +46,12 @@ function SignUp() {
 
   const onSubmit = async (data: SignUpData) => {
     try {
-      await signup(data.email, data.password, data.name);
-      navigate("/dashboard");
+      const result  = await signup(data.email, data.password, data.name);
+     
+      if(result.success) {
+        navigate("/");
+      }
+
     } catch (error) {
       console.error("an error occurred", error);
     }

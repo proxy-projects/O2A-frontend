@@ -5,6 +5,7 @@ import Button from "../../components/ui/Button/Button";
 import Input from "../../components/ui/Input/Input";
 import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../../context/AuthContext";
+import { useState } from "react";
 
 const loginSchema = z.object({
   email: z.string().email("Provide a valid email address"),
@@ -21,6 +22,7 @@ type LoginData = z.infer<typeof loginSchema>;
 
 function Login() {
   const navigate = useNavigate();
+  const[error, setError]= useState<string>("");
   const {
     control,
     handleSubmit,
@@ -39,10 +41,14 @@ function Login() {
       const result =  await login(data.email, data.password);
 
       if(result.success) {
-        navigate('/dashboard')
+        navigate('/')
       }
 
-    } catch (error) {
+      if(result.error)  {
+        setError(result.error?.message || "Invalid Credentials");
+      }
+      
+    } catch (error:any) {
       console.error("Login failed:", error);
     }
   };
@@ -87,6 +93,7 @@ function Login() {
             Sign Up
           </Link>
         </div>
+        {error && <p className="text-red-400">{error}</p>}
       </div>
     </div>
   );

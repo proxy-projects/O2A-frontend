@@ -4,15 +4,16 @@ import InfoForm from "./components/ui/InfoForm/InfoForm";
 import QRCodePage from "./components/ui/QrCode/QrCode";
 import Login from "./pages/auth/Login";
 import SignUp from "./pages/auth/SignUp";
-import Welcome from "./pages/Welcome";
+// import Welcome from "./pages/Welcome";
 import Dashboard from "./pages/organization/dashboard/Dashboard";
+import GetStarted from "./pages/organization/getstarted/GetStarted";
 
 const App: React.FC = () => {
   return (
     <Router>
       <Routes>
         <Route path="/qr-code" element={<QRCodePage />} />
-        <Route path="/" element={<Welcome />} />
+        <Route path="/" element={<GetStarted />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
