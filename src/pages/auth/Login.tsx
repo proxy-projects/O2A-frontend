@@ -3,6 +3,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Button from "../../components/ui/Button/Button";
 import Input from "../../components/ui/Input/Input";
+import { Link } from "react-router-dom";
 
 const loginSchema = z.object({
   email: z.string().email("Provide a valid email address"),
@@ -15,10 +16,14 @@ const loginSchema = z.object({
     ),
 });
 
-type LoginFormData = z.infer<typeof loginSchema>;
+type LoginData = z.infer<typeof loginSchema>;
 
-function LoginForm() {
-  const { control, handleSubmit, formState: { isSubmitting } } = useForm<LoginFormData>({
+function Login() {
+  const {
+    control,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<LoginData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
@@ -26,12 +31,12 @@ function LoginForm() {
     },
   });
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (data: LoginData) => {
     try {
       console.log(data);
       // Add your login logic here
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error("Login failed:", error);
     }
   };
 
@@ -57,9 +62,9 @@ function LoginForm() {
           <p className="text-blue-600 cursor-pointer hover:text-blue-500 text-sm">
             Forgot password?
           </p>
-          <Button 
+          <Button
             type="submit"
-            className="bg-blue-600 hover:bg-blue-500 text-white w-full" 
+            className="bg-blue-600 hover:bg-blue-500 text-white w-full"
             size="lg"
             disabled={isSubmitting}
           >
@@ -68,13 +73,16 @@ function LoginForm() {
         </form>
         <div className="flex space-x-2 mt-10 items-center justify-center">
           <p className="text-center text-gray-600">Don't have an account?</p>
-          <p className="text-blue-600 cursor-pointer hover:text-blue-500">
+          <Link
+            to="/signup"
+            className="text-blue-600 cursor-pointer hover:text-blue-500"
+          >
             Sign Up
-          </p>
+          </Link>
         </div>
       </div>
     </div>
   );
 }
 
-export default LoginForm;
+export default Login;

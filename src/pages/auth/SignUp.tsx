@@ -3,6 +3,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Input from "../../components/ui/Input/Input";
 import Button from "../../components/ui/Button/Button";
+import { Link } from "react-router-dom";
 
 const signUpSchema = z
   .object({
@@ -25,10 +26,10 @@ const signUpSchema = z
     path: ["confirmPassword"],
   });
 
-type SignUpFormData = z.infer<typeof signUpSchema>;
+type SignUpData = z.infer<typeof signUpSchema>;
 
-function SignUpForm() {
-  const { control, handleSubmit } = useForm<SignUpFormData>({
+function SignUp() {
+  const { control, handleSubmit } = useForm<SignUpData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       username: "",
@@ -39,18 +40,15 @@ function SignUpForm() {
     },
   });
 
-  const onSubmit = (data: SignUpFormData) => {
+  const onSubmit = (data: SignUpData) => {
     console.log(data);
   };
 
   return (
-    <div className="h-screen flex items-center justify-center border border-red-400">
+    <div className="h-screen flex items-center justify-center">
       <div className="w-1/3 border rounded-3xl pt-6 pb-10 px-8 space-y-5">
         <h1 className="text-3xl text-center">Register</h1>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-6"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <Input name="username" control={control} placeholder="Username" />
           <Input
             name="email"
@@ -101,10 +99,12 @@ function SignUpForm() {
             Register
           </Button>
         </form>
-        <p className="font-light text-center">Already registered? <span className="font-semibold">Login</span></p>
+        <p className="font-light text-center">
+          Already registered? <Link  to="/login" className="text-blue-600">Login</Link>
+        </p>
       </div>
     </div>
   );
 }
 
-export default SignUpForm;
+export default SignUp;
