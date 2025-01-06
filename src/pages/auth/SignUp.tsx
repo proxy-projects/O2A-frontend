@@ -42,8 +42,7 @@ function SignUp() {
     },
   });
 
-  const { session, signup, isLoading } = UserAuth();
-  console.log(session)
+  const { signup, isLoading } = UserAuth();
 
   const onSubmit = async (data: SignUpData) => {
     try {

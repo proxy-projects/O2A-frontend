@@ -32,8 +32,7 @@ function Login() {
       password: "",
     },
   });
-  const {session, login } = UserAuth()
-  console.log(session)
+  const { login } = UserAuth()
 
   const onSubmit = async (data: LoginData) => {
     try {
