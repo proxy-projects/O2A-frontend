@@ -32,7 +32,7 @@ function Login() {
       password: "",
     },
   });
-  const {session, login, isLoading} = UserAuth()
+  const {session, login } = UserAuth()
   console.log(session)
 
   const onSubmit = async (data: LoginData) => {
