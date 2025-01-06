@@ -1,10 +1,9 @@
-// import LoginForm from "./LoginForm"
-import SignUpForm from "./SignupForm"
+// import Login from "./Login"
+
+import SignUp from "./SignUp";
 
 function Auth() {
-  return (
-   <SignUpForm/>
-  )
+  return <SignUp />;
 }
 
-export default Auth
+export default Auth;

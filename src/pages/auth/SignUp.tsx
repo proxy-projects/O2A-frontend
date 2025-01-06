@@ -3,11 +3,12 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Input from "../../components/ui/Input/Input";
 import Button from "../../components/ui/Button/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { UserAuth } from "../../context/AuthContext";
 
 const signUpSchema = z
   .object({
-    username: z.string().min(3, "Username must be at least 3 characters"),
+    name: z.string().min(3, "name must be at least 3 characters"),
     email: z.string().email("Provide a valid email address"),
     password: z
       .string()
@@ -29,10 +30,11 @@ const signUpSchema = z
 type SignUpData = z.infer<typeof signUpSchema>;
 
 function SignUp() {
+  const navigate = useNavigate();
   const { control, handleSubmit } = useForm<SignUpData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      username: "",
+      name: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -40,8 +42,16 @@ function SignUp() {
     },
   });
 
-  const onSubmit = (data: SignUpData) => {
-    console.log(data);
+  const { session, signup, isLoading } = UserAuth();
+  console.log(session)
+
+  const onSubmit = async (data: SignUpData) => {
+    try {
+      await signup(data.email, data.password, data.name);
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("an error occurred", error);
+    }
   };
 
   return (
@@ -49,7 +59,7 @@ function SignUp() {
       <div className="w-1/3 border rounded-3xl pt-6 pb-10 px-8 space-y-5">
         <h1 className="text-3xl text-center">Register</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <Input name="username" control={control} placeholder="Username" />
+          <Input name="name" control={control} placeholder="name" />
           <Input
             name="email"
             control={control}
@@ -96,11 +106,14 @@ function SignUp() {
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-500 text-white py-3"
           >
-            Register
+            {isLoading ? "Loading"  : "Register"}
           </Button>
         </form>
         <p className="font-light text-center">
-          Already registered? <Link  to="/login" className="text-blue-600">Login</Link>
+          Already registered?{" "}
+          <Link to="/login" className="text-blue-600">
+            Login
+          </Link>
         </p>
       </div>
     </div>

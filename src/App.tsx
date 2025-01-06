@@ -5,6 +5,7 @@ import QRCodePage from "./components/ui/QrCode/QrCode";
 import Login from "./pages/auth/Login";
 import SignUp from "./pages/auth/SignUp";
 import Welcome from "./pages/Welcome";
+import Dashboard from "./pages/organization/dashboard/Dashboard";
 
 const App: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ const App: React.FC = () => {
         <Route path="/" element={<Welcome />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/form/:organizationId" element={<InfoForm />} />
         <Route path="*" element={<div>page not found</div>} />
       </Routes>
