@@ -55,7 +55,7 @@ function Login() {
 
   return (
     <div className="h-screen flex items-center justify-center">
-      <div className="space-y-7 w-1/3 border py-10 px-8 shadow rounded-3xl">
+      <div className="space-y-7 w-full max-w-md border py-10 px-8 shadow rounded-3xl">
         <div className="space-y-1 mb-10">
           <h1 className="text-3xl text-center">Login</h1>
         </div>
