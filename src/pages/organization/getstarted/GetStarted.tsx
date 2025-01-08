@@ -21,11 +21,11 @@ function GetStarted() {
 
         <div className="mt-32 max-w-2xl">
           <h1 className="text-[2.75rem] font-bold leading-tight tracking-tight sm:text-6xl text-blue-600">
-            Proceed to create an organization
+            Proceed to add your organization
           </h1>
          <Button className="mt-10 border-2 border-blue-600 text-blue-600  hover:bg-blue-600 hover:text-white transition  ease-out">
          <Link 
-            to="#"
+            to="/create-organization"
             className="text-lg  decoration-2 underline-offset-4"
           >
             Click here
