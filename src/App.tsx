@@ -4,20 +4,62 @@ import InfoForm from "./components/ui/InfoForm/InfoForm";
 import QRCodePage from "./components/ui/QrCode/QrCode";
 import Login from "./pages/auth/Login";
 import SignUp from "./pages/auth/SignUp";
-// import Welcome from "./pages/Welcome";
 import Dashboard from "./pages/organization/dashboard/Dashboard";
 import GetStarted from "./pages/organization/getstarted/GetStarted";
+import CreateOrganization from "./pages/organization/create/CreateOrganization";
+import ProtectedRoute from "./pages/ProtectedRoute";
 
 const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/qr-code" element={<QRCodePage />} />
-        <Route path="/" element={<GetStarted />} />
+        {/* Public Routes */}
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/form/:organizationId" element={<InfoForm />} />
+
+        {/* Protected Routes */}
+        <Route
+          path="/qr-code"
+          element={
+            <ProtectedRoute>
+              <QRCodePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <GetStarted />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/create-organization"
+          element={
+            <ProtectedRoute>
+              <CreateOrganization />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/:id"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/form/:organizationId"
+          element={
+            <ProtectedRoute>
+              <InfoForm />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Not Found Route */}
         <Route path="*" element={<div>page not found</div>} />
       </Routes>
     </Router>
