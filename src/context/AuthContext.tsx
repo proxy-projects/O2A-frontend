@@ -88,6 +88,22 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         setIsLoading(false);
         return { success: false, error };
       }
+
+      if(data.user) {
+        const {error: insertError} = await supabase.from('users').insert([
+          {
+            user_id: data.user.id,
+            name: name,
+            email:  email.toLowerCase(),
+          }
+        ])
+
+        if(insertError) {
+          console.error("Error inserting user data", insertError)
+          return {success: false, error: insertError}
+        }
+      }
+
       return { success: true, data };
     } catch (error) {
       throw error;

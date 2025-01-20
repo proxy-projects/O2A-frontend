@@ -5,6 +5,7 @@ import Input from "../Input/Input";
 import Button from "../Button/Button";
 import { supabase } from "../../../config/supabaseClient";
 import { useNavigate } from "react-router-dom";
+import { UserAuth } from "../../../context/AuthContext";
 
 const organizationSchema = z.object({
   name: z
@@ -22,6 +23,7 @@ type OrganizationFormData = z.infer<typeof organizationSchema>;
 
 function CreateOrganization() {
   const navigate = useNavigate();
+  const { session } = UserAuth();
   const {
     control,
     handleSubmit,
@@ -36,25 +38,45 @@ function CreateOrganization() {
 
   const onSubmit = async (organizationData: OrganizationFormData) => {
     try {
-      const { data, error } = await supabase
+      const { data: userData } = await supabase
+        .from("users")
+        .select("organization_id")
+        .eq("user_id", session.user.id)
+        .single();
+
+      if (userData?.organization_id) {
+        console.error("User already has an organization");
+        return;
+      }
+
+      const { data: orgData, error: orgError } = await supabase
         .from("organizations")
         .insert([
           {
             organization_name: organizationData.name,
             organization_description: organizationData.description,
+            created_by: session.user.id,
           },
         ])
         .select()
         .single();
 
-      if (error) {
-        console.error("Enter organization data");
+      if (orgError) {
+        console.error("Enter organization data", orgError);
         return;
       }
 
-      if (data) {
-        navigate("/" + data.id);
+      const { error: updateError } = await supabase
+        .from("users")
+        .update({ organization_id: orgData.id })
+        .eq("user_id", session.user.id);
+
+      if (updateError) {
+        console.error("Error updating  user's organization:", updateError);
+        return;
       }
+
+      navigate("/" + orgData.id);
     } catch (error) {
       console.error("Error submitting form:", error);
     }
