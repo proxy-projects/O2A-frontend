@@ -62,7 +62,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         setIsLoading(false);
       }
 
-      setSession(undefined);
+      setSession(null);
     } catch (error) {
       throw error;
     } finally {
