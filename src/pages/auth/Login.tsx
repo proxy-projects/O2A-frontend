@@ -93,7 +93,7 @@ function Login() {
             Sign Up
           </Link>
         </div>
-        {error && <p className="text-red-400">{error}</p>}
+        {error && <p className="text-red-400 text-center">{error}</p>}
       </div>
     </div>
   );
