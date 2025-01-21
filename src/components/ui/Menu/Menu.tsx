@@ -14,7 +14,7 @@ import { UserAuth } from "../../../context/AuthContext";
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const { logout } = UserAuth();
+  const { logout, session } = UserAuth();
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -30,6 +30,8 @@ export default function AccountMenu() {
       console.error(error);
     }
   };
+
+  const user = session?.user?.user_metadata?.display_name
 
   return (
     <React.Fragment>
@@ -51,7 +53,7 @@ export default function AccountMenu() {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+            <Avatar sx={{ width: 32, height: 32 }}>{user[0]}</Avatar>
           </IconButton>
         </Tooltip>
       </Box>
