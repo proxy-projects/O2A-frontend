@@ -6,6 +6,7 @@ import Input from "../../components/ui/Input/Input";
 import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../../context/AuthContext";
 import { useState } from "react";
+import { supabase } from "../../config/supabaseClient";
 
 const loginSchema = z.object({
   email: z.string().email("Provide a valid email address"),
@@ -22,7 +23,7 @@ type LoginData = z.infer<typeof loginSchema>;
 
 function Login() {
   const navigate = useNavigate();
-  const[error, setError]= useState<string>("");
+  const [error, setError] = useState<string>("");
   const {
     control,
     handleSubmit,
@@ -34,21 +35,37 @@ function Login() {
       password: "",
     },
   });
-  const { login } = UserAuth()
+  const { login } = UserAuth();
 
   const onSubmit = async (data: LoginData) => {
     try {
-      const result =  await login(data.email, data.password);
+      const result = await login(data.email, data.password);
 
       if(result.success) {
-        navigate('/')
+
+        const { data: { session }} = await supabase.auth.getSession();
+        
+        const { data: userData, error } = await supabase
+          .from("users")
+          .select()
+          .eq("user_id", session?.user?.id)
+          .single();
+
+        if (error) {
+          throw error;
+        }
+
+        if (userData?.organization_id) {
+          navigate("/" + userData?.organization_id);
+        } else {
+          navigate("/");
+        }
       }
 
-      if(result.error)  {
+      if (result.error) {
         setError(result.error?.message || "Invalid Credentials");
       }
-      
-    } catch (error:any) {
+    } catch (error: any) {
       console.error("Login failed:", error);
     }
   };
