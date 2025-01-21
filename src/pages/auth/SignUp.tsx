@@ -46,16 +46,20 @@ function SignUp() {
 
   const onSubmit = async (data: SignUpData) => {
     try {
-      await signup(data.email, data.password, data.name);
-      navigate("/dashboard");
+      const result  = await signup(data.email, data.password, data.name);
+     
+      if(result.success) {
+        navigate("/");
+      }
+
     } catch (error) {
       console.error("an error occurred", error);
     }
   };
 
   return (
-    <div className="h-screen flex items-center justify-center">
-      <div className="w-1/3 border rounded-3xl pt-6 pb-10 px-8 space-y-5">
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="w-full max-w-md border rounded-3xl pt-6 pb-10 px-8 space-y-5">
         <h1 className="text-3xl text-center">Register</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <Input name="name" control={control} placeholder="name" />
