@@ -8,6 +8,7 @@ import Dashboard from "./pages/organization/dashboard/Dashboard";
 import GetStarted from "./pages/organization/getstarted/GetStarted";
 import CreateOrganization from "./components/ui/create/CreateOrganization";
 import ProtectedRoute from "./pages/ProtectedRoute";
+import Profile from "./pages/organization/profile/Profile";
 
 const App: React.FC = () => {
   return (
@@ -45,6 +46,14 @@ const App: React.FC = () => {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+          <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           }
         />
