@@ -43,8 +43,9 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         setIsLoading(false);
         return { success: false, error };
       }
+      
       return { success: true, error };
-      // setIsAuthenticated(true);
+
     } catch (error) {
       throw error;
     } finally {
@@ -89,18 +90,18 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         return { success: false, error };
       }
 
-      if(data.user) {
-        const {error: insertError} = await supabase.from('users').insert([
+      if (data.user) {
+        const { error: insertError } = await supabase.from("users").insert([
           {
             user_id: data.user.id,
             name: name,
-            email:  email.toLowerCase(),
-          }
-        ])
+            email: email.toLowerCase(),
+          },
+        ]);
 
-        if(insertError) {
-          console.error("Error inserting user data", insertError)
-          return {success: false, error: insertError}
+        if (insertError) {
+          console.error("Error inserting user data", insertError);
+          return { success: false, error: insertError };
         }
       }
 
