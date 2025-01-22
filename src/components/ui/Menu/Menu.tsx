@@ -8,8 +8,9 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import PersonAdd from "@mui/icons-material/PersonAdd";
-import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
+import QrCode  from "@mui/icons-material/QrCode";
+
 import { UserAuth } from "../../../context/AuthContext";
 
 export default function AccountMenu() {
@@ -105,13 +106,13 @@ export default function AccountMenu() {
           <ListItemIcon>
             <PersonAdd fontSize="small" />
           </ListItemIcon>
-          Add Another User
+          Add User
         </MenuItem>
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
-            <Settings fontSize="small" />
+            <QrCode fontSize="small" />
           </ListItemIcon>
-          Settings
+          Get QR Code
         </MenuItem>
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
