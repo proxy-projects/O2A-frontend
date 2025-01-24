@@ -6,8 +6,8 @@ import Login from "./pages/auth/Login";
 import SignUp from "./pages/auth/SignUp";
 import Dashboard from "./pages/organization/dashboard/Dashboard";
 import GetStarted from "./pages/organization/getstarted/GetStarted";
-import CreateOrganization from "./components/ui/create/CreateOrganization";
 import ProtectedRoute from "./pages/ProtectedRoute";
+import Profile from "./pages/organization/profile/Profile";
 
 const App: React.FC = () => {
   return (
@@ -33,18 +33,18 @@ const App: React.FC = () => {
           }
         />
         <Route
-          path="/create-organization"
-          element={
-            <ProtectedRoute>
-              <CreateOrganization />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/:id"
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+          <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           }
         />

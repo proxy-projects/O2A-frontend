@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
   useController, 
   Control, 
   FieldValues, 
   Path,
-  RegisterOptions
+  RegisterOptions,
+  PathValue
 } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 
-interface InputProps<T extends FieldValues> extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'name'> {
+interface InputProps<T extends FieldValues> extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'name' | 'defaultValue'> {
   name: Path<T>;
   control: Control<T>;
   rules?: Omit<
@@ -17,6 +18,8 @@ interface InputProps<T extends FieldValues> extends Omit<React.InputHTMLAttribut
   >;
   placeholder?: string;
   type?: string;
+  defaultValue?: PathValue<T, Path<T>>;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 function Input<T extends FieldValues>({ 
@@ -25,6 +28,8 @@ function Input<T extends FieldValues>({
   rules,
   placeholder,
   type = "text",
+  defaultValue,
+  onChange,
   ...props 
 }: InputProps<T>) {
   const [showPassword, setShowPassword] = useState(false);
@@ -34,11 +39,23 @@ function Input<T extends FieldValues>({
   } = useController({
     name,
     control,
-    rules
+    rules,
+    defaultValue: defaultValue as PathValue<T, Path<T>>
   });
 
   const isPasswordType = type === 'password';
   const inputType = isPasswordType ? (showPassword ? 'text' : 'password') : type;
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    field.onChange(e);
+    onChange?.(e);
+  };
+
+  useEffect(() => {
+    if (defaultValue !== undefined) {
+      field.onChange(defaultValue);
+    }
+  }, [defaultValue, field]);
 
   return (
     <div className="w-full">
@@ -47,6 +64,7 @@ function Input<T extends FieldValues>({
           {...field}
           placeholder={placeholder}
           type={inputType}
+          onChange={handleChange}
           className={`block w-full px-3 py-4 text-sm border rounded-md shadow-sm outline-none 
             ${error ? 'border-red-500 focus:border-red-500' : 'focus:border-blue-600'}
             ${isPasswordType ? 'pr-12' : ''}`}

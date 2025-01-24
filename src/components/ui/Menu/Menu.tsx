@@ -12,11 +12,14 @@ import Logout from "@mui/icons-material/Logout";
 import QrCode  from "@mui/icons-material/QrCode";
 
 import { UserAuth } from "../../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const { logout, session } = UserAuth();
   const open = Boolean(anchorEl);
+  const navigate = useNavigate()
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -31,6 +34,10 @@ export default function AccountMenu() {
       console.error(error);
     }
   };
+
+  const navigateToProfile = () => {
+    navigate('/profile')
+  }
 
   const user = session?.user?.user_metadata?.display_name
 
@@ -95,7 +102,7 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={navigateToProfile}>
           <Avatar /> Profile
         </MenuItem>
         <MenuItem onClick={handleClose}>
