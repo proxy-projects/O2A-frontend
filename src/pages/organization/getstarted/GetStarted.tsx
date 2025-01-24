@@ -1,10 +1,20 @@
-import { Package } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Zap } from "lucide-react";
 import Button from "../../../components/ui/Button/Button";
 import CreateOrganization from "../../../components/ui/create/CreateOrganization";
-import { useState } from "react";
+import { UserAuth } from "../../../context/AuthContext";
+import { supabase } from "../../../config/supabaseClient";
+import { useNavigate } from "react-router-dom";
+import Spinner from "../../../components/ui/Spinner/Spinner";
 
 function GetStarted() {
   const [showPopup, setShowPopup] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasOrganization, setHasOrganization] = useState(false);
+  const { session } = UserAuth();
+  const navigate = useNavigate();
+
+  const userId = session?.user?.id;
 
   const handleOpenPopup = () => {
     setShowPopup(true);
@@ -13,6 +23,42 @@ function GetStarted() {
   const handleClosePopup = () => {
     setShowPopup(false);
   };
+
+  useEffect(() => {
+
+    const handleNavigation = async () => {
+      if (!userId) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const { data: organization } = await supabase
+          .from("organizations")
+          .select("id")
+          .eq("created_by", userId)
+          .single();
+
+        if (organization) {
+          setHasOrganization(true);
+          navigate(`/${organization.id}`);
+        } else {
+          setHasOrganization(false);
+        }
+      } catch (error) {
+        console.error("Error fetching organization:", error);
+        setHasOrganization(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    handleNavigation();
+  }, [userId, navigate]);
+
+  if (isLoading || !userId || hasOrganization) {
+    return <Spinner />;
+  }
 
   return (
     <div className="relative h-screen w-full overflow-hidden bg-white">
@@ -26,9 +72,9 @@ function GetStarted() {
       <div className="flex flex-col justify-between h-full max-w-6xl px-8 py-8 bg-blue-50 md:bg-white">
         <div className="flex items-center gap-2">
           <div className="flex h-10 w-10 items-center justify-between rounded">
-            <Package className="h-10 w-10 text-blue-600" />
+            <Zap className="h-10 w-10 text-blue-600" />
           </div>
-          <span className="text-xl font-semibold text-blue-600">Bolt</span>
+          <span className="text-xl font-semibold text-blue-600">Zap</span>
         </div>
 
         <div className="mt-32 max-w-2xl">

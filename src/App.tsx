@@ -6,7 +6,6 @@ import Login from "./pages/auth/Login";
 import SignUp from "./pages/auth/SignUp";
 import Dashboard from "./pages/organization/dashboard/Dashboard";
 import GetStarted from "./pages/organization/getstarted/GetStarted";
-import CreateOrganization from "./components/ui/create/CreateOrganization";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import Profile from "./pages/organization/profile/Profile";
 
@@ -30,14 +29,6 @@ const App: React.FC = () => {
           element={
             <ProtectedRoute>
               <GetStarted />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/create-organization"
-          element={
-            <ProtectedRoute>
-              <CreateOrganization />
             </ProtectedRoute>
           }
         />
