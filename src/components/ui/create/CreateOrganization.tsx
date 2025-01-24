@@ -1,10 +1,11 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import Input from "../../../components/ui/Input/Input";
-import Button from "../../../components/ui/Button/Button";
+import Input from "../Input/Input";
+import Button from "../Button/Button";
 import { supabase } from "../../../config/supabaseClient";
 import { useNavigate } from "react-router-dom";
+import { UserAuth } from "../../../context/AuthContext";
 
 const organizationSchema = z.object({
   name: z
@@ -22,6 +23,7 @@ type OrganizationFormData = z.infer<typeof organizationSchema>;
 
 function CreateOrganization() {
   const navigate = useNavigate();
+  const { session } = UserAuth();
   const {
     control,
     handleSubmit,
@@ -36,33 +38,53 @@ function CreateOrganization() {
 
   const onSubmit = async (organizationData: OrganizationFormData) => {
     try {
-      const { data, error } = await supabase
+      const { data: userData } = await supabase
+        .from("users")
+        .select("organization_id")
+        .eq("user_id", session.user.id)
+        .single();
+
+      if (userData?.organization_id) {
+        console.error("User already has an organization");
+        return;
+      }
+
+      const { data: orgData, error: orgError } = await supabase
         .from("organizations")
         .insert([
           {
             organization_name: organizationData.name,
             organization_description: organizationData.description,
+            created_by: session.user.id,
           },
         ])
         .select()
         .single();
 
-      if (error) {
-        console.error("Enter organization data");
+      if (orgError) {
+        console.error("Enter organization data", orgError);
         return;
       }
 
-      if (data) {
-        navigate("/" + data.id);
+      const { error: updateError } = await supabase
+        .from("users")
+        .update({ organization_id: orgData.id })
+        .eq("user_id", session.user.id);
+
+      if (updateError) {
+        console.error("Error updating  user's organization:", updateError);
+        return;
       }
+
+      navigate("/" + orgData.id);
     } catch (error) {
       console.error("Error submitting form:", error);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-blue-50">
-      <div className="w-full max-w-lg space-y-8 border p-8 bg-white shadow rounded-md">
+    <div className="flex items-center justify-center">
+      <div className="w-full max-w-lg space-y-8 pb-8 bg-white rounded-md">
         <div className="text-center">
           <h1 className="text-2xl font-bold tracking-tight">
             Add organization

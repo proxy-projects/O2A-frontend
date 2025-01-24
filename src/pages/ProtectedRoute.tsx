@@ -14,7 +14,7 @@ const ProtectedRoute = ({ children }: { children: ReactNode }) => {
     );
   }
 
-  return <div>{session ? <>{children}</> : <Navigate to="/signup" />}</div>;
+  return <div>{session ? <>{children}</> : <Navigate to="/login" />}</div>;
 };
 
 export default ProtectedRoute;

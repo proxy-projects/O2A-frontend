@@ -6,18 +6,16 @@ import Login from "./pages/auth/Login";
 import SignUp from "./pages/auth/SignUp";
 import Dashboard from "./pages/organization/dashboard/Dashboard";
 import GetStarted from "./pages/organization/getstarted/GetStarted";
-import CreateOrganization from "./pages/organization/create/CreateOrganization";
+import CreateOrganization from "./components/ui/create/CreateOrganization";
 import ProtectedRoute from "./pages/ProtectedRoute";
 
 const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        {/* Public Routes */}
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
 
-        {/* Protected Routes */}
         <Route
           path="/qr-code"
           element={
@@ -59,7 +57,6 @@ const App: React.FC = () => {
           }
         />
 
-        {/* Not Found Route */}
         <Route path="*" element={<div>page not found</div>} />
       </Routes>
     </Router>
