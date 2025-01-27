@@ -8,6 +8,11 @@ import Dashboard from "./pages/organization/dashboard/Dashboard";
 import GetStarted from "./pages/organization/getstarted/GetStarted";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import Profile from "./pages/organization/profile/Profile";
+import Today from "./pages/organization/dashboard/Today";
+import CheckedIn from "./pages/organization/dashboard/CheckedIn";
+import CheckedOut from "./pages/organization/dashboard/CheckedOut";
+import Forms from "./pages/organization/dashboard/Forms";
+
 
 const App: React.FC = () => {
   return (
@@ -39,7 +44,13 @@ const App: React.FC = () => {
               <Dashboard />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route index element={<Today />} />
+          <Route path="today" element={<Today />} />
+          <Route path="checked-in" element={<CheckedIn />} />
+          <Route path="checked-out" element={<CheckedOut />} />
+          <Route path="forms" element={<Forms />} />
+        </Route>
           <Route
           path="/profile"
           element={

@@ -1,19 +1,24 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams, useLocation } from "react-router-dom";
 import {
   Zap,
   Clock,
   UserPlus,
   UserMinus,
+  BookText,
 } from "lucide-react";
 import { cn } from "../../../lib/utils";
 
-const navigation = [
-  { name: "Today", href: "/today", icon: Clock },
-  { name: "Checked-in", href: "/checked-in", icon: UserPlus },
-  { name: "Checked-out", href: "/checked-out", icon: UserMinus, current: true },
-];
-
 function Sidebar() {
+  const { id } = useParams();
+  const location = useLocation();
+
+  const navigation = [
+    { name: "Today", href: `/${id}/today`, icon: Clock },
+    { name: "Checked-in", href: `/${id}/checked-in`, icon: UserPlus },
+    { name: "Checked-out", href: `/${id}/checked-out`, icon: UserMinus },
+    { name: "Forms", href: `/${id}/forms`, icon: BookText },
+  ];
+
   return (
     <div className="flex h-screen w-[280px] flex-col border-r bg-white">
       <div className="flex h-16 items-center border-b px-4">
@@ -33,7 +38,7 @@ function Sidebar() {
             className={({ isActive }) =>
               cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
-                isActive
+                (isActive || (location.pathname === `/${id}` && item.name === "Today"))
                   ? "bg-blue-600 text-white"
                   : "text-gray-500 hover:bg-gray-100 hover:text-gray-900"
               )
