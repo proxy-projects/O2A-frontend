@@ -49,14 +49,17 @@ export default function AccountMenu() {
           alignItems: "center",
           justifyContent: "end",
           textAlign: "center",
-          paddingRight: "8px",
+          height: "64px",
+          padding: "0 16px",
+          backgroundColor: "white",
+          boxShadow: "0 1px 3px 0 rgb(0 0 0 / 0.1)",
         }}
       >
         <Tooltip title="Organization settings">
           <IconButton
             onClick={handleClick}
             size="small"
-            sx={{ ml: 2 }}
+            sx={{ ml: 2}}
             aria-controls={open ? "account-menu" : undefined}
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}

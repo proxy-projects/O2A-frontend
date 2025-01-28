@@ -1,4 +1,5 @@
 import { UserAuth } from "../../../context/AuthContext";
+import { Outlet } from "react-router-dom";
 import Spinner from "../../../components/ui/Spinner/Spinner";
 import Sidebar from "../../../components/ui/Sidebar/Sidebar";
 import Menu from "../../../components/ui/Menu/Menu";
@@ -19,10 +20,12 @@ function Dashboard() {
       <div className="col-start-1 col-end-1">
         <Sidebar />
       </div>
-      <div className=" col-start-2 col-span-full row-span-1">
+      <div className="col-start-2 col-span-full row-span-1">
         <Menu />
       </div>
-      <div className="col-start-2 col-end-4 row-start-2">dashboard content</div>
+      <div className="col-start-2 col-end-4 row-start-2 p-10">
+        <Outlet />
+      </div>
     </div>
   );
 }
