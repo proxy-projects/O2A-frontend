@@ -11,7 +11,7 @@ import Profile from "./pages/organization/profile/Profile";
 import Today from "./pages/organization/dashboard/Today";
 import CheckedIn from "./pages/organization/dashboard/CheckedIn";
 import CheckedOut from "./pages/organization/dashboard/CheckedOut";
-import Forms from "./pages/organization/dashboard/Forms";
+import OrganizationForm from "./pages/organization/OrganizationForm/OrganizationForm";
 
 
 const App: React.FC = () => {
@@ -49,13 +49,20 @@ const App: React.FC = () => {
           <Route path="today" element={<Today />} />
           <Route path="checked-in" element={<CheckedIn />} />
           <Route path="checked-out" element={<CheckedOut />} />
-          <Route path="forms" element={<Forms />} />
         </Route>
           <Route
           path="/profile"
           element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/create-form"
+          element={
+            <ProtectedRoute>
+              <OrganizationForm/>
             </ProtectedRoute>
           }
         />

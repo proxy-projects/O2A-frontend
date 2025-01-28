@@ -4,7 +4,6 @@ import {
   Clock,
   UserPlus,
   UserMinus,
-  BookText,
 } from "lucide-react";
 import { cn } from "../../../lib/utils";
 
@@ -16,7 +15,6 @@ function Sidebar() {
     { name: "Today", href: `/${id}/today`, icon: Clock },
     { name: "Checked-in", href: `/${id}/checked-in`, icon: UserPlus },
     { name: "Checked-out", href: `/${id}/checked-out`, icon: UserMinus },
-    { name: "Forms", href: `/${id}/forms`, icon: BookText },
   ];
 
   return (

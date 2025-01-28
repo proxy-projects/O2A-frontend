@@ -10,6 +10,7 @@ import Tooltip from "@mui/material/Tooltip";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Logout from "@mui/icons-material/Logout";
 import QrCode  from "@mui/icons-material/QrCode";
+import { BookText } from "lucide-react";
 
 import { UserAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -37,6 +38,10 @@ export default function AccountMenu() {
 
   const navigateToProfile = () => {
     navigate('/profile')
+  }
+
+  const navigateToCreateForm = () => {
+    navigate('/create-form');
   }
 
   const user = session?.user?.user_metadata?.display_name
@@ -108,9 +113,6 @@ export default function AccountMenu() {
         <MenuItem onClick={navigateToProfile}>
           <Avatar /> Profile
         </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Avatar /> My account
-        </MenuItem>
         <Divider />
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
@@ -123,6 +125,12 @@ export default function AccountMenu() {
             <QrCode fontSize="small" />
           </ListItemIcon>
           Get QR Code
+        </MenuItem>
+        <MenuItem onClick={navigateToCreateForm}>
+          <ListItemIcon>
+            <BookText fontSize="small" />
+          </ListItemIcon>
+          Create Form
         </MenuItem>
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
