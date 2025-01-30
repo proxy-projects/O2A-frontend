@@ -5,8 +5,8 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { UserAuth } from "../../../context/AuthContext";
-import { supabase } from "../../../config/supabaseClient";
 import { useState } from "react";
+import { fetchOrganization, submitForm } from '../../../api/api';
 
 const schema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -37,25 +37,11 @@ const OrganizationForm = () => {
   const onSubmit = async (data: { title: string; description: string }) => {
     setLoading(true);
     try {
-      const { data: organization, error: orgError } = await supabase
-        .from("organizations")
-        .select("id")
-        .eq("created_by", currentUserId)
-        .single();
+      const { data: organization, error: orgError } = await fetchOrganization(currentUserId);
 
       if (orgError) throw new Error("Failed to fetch organization");
 
-      const { error: formError } = await supabase
-        .from("forms")
-        .insert([
-          {
-            organization_id: organization?.id,
-            created_by: currentUserId,
-            title: data.title,
-            description: data.description,
-          },
-        ])
-        .single();
+      const { error: formError } = await submitForm(organization.id, currentUserId, data);
 
       if (formError) throw new Error("Failed to create form");
 
