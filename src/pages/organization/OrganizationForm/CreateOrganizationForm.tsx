@@ -21,12 +21,6 @@ const schema = z.object({
   description: z.string().min(1, "Description is required"),
 });
 
-interface FormDataResponse {
-  id: string;
-  title: string;
-  description: string;
-}
-
 const CreateOrganizationForm = () => {
   const navigate = useNavigate();
   const { session } = UserAuth();
@@ -44,7 +38,6 @@ const CreateOrganizationForm = () => {
     message: string;
     severity: AlertColor;
   }>({ open: false, message: "", severity: "success" });
-  const [formCreated, setFormCreated] = useState(false);
 
   const handleGoBack = () => {
     navigate(-1);
@@ -74,26 +67,11 @@ const CreateOrganizationForm = () => {
 
       if (formError) throw new Error("Failed to create form");
 
-      // setSnackbar({
-      //   open: true,
-      //   message: "Form created successfully!",
-      //   severity: "success",
-      // });
-
-      console.log(organization)
-
-      console.log(formData)
-
-      // if(formData) {
-      //   console.log(formData)
-      //   setFormCreated(true);
-      // }
-
-      // if (formCreated) {
-      //   navigateToFormPage(formData?.id);
-      // } else {
-      //   console.log("the form was not created")
-      // }
+      if (formData) {
+        navigateToFormPage(formData?.id);
+      } else {
+        console.log("the form was not created")
+      }
 
 
     } catch (error) {
@@ -150,7 +128,6 @@ const CreateOrganizationForm = () => {
               margin="normal"
               error={!!errors.title}
               helperText={errors.title ? (errors.title.message as string) : ""}
-              disabled={formCreated}
             />
           )}
         />
@@ -170,7 +147,6 @@ const CreateOrganizationForm = () => {
               helperText={
                 errors.description ? (errors.description.message as string) : ""
               }
-              disabled={formCreated}
             />
           )}
         />
@@ -182,7 +158,6 @@ const CreateOrganizationForm = () => {
             color="primary"
             className="mt-4"
             sx={{ padding: "10px 20px" }}
-            disabled={formCreated}
           >
             {loading ? "Creating..." : "Create Form"}
           </Button>
