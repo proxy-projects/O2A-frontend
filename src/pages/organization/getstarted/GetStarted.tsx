@@ -3,9 +3,9 @@ import { Zap } from "lucide-react";
 import Button from "../../../components/ui/Button/Button";
 import CreateOrganization from "../../../components/ui/create/CreateOrganization";
 import { UserAuth } from "../../../context/AuthContext";
-import { supabase } from "../../../config/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../../../components/ui/Spinner/Spinner";
+import { fetchOrganization } from '../../../api/api';
 
 function GetStarted() {
   const [showPopup, setShowPopup] = useState(false);
@@ -33,11 +33,7 @@ function GetStarted() {
       }
 
       try {
-        const { data: organization } = await supabase
-          .from("organizations")
-          .select("id")
-          .eq("created_by", userId)
-          .single();
+        const { data: organization } = await fetchOrganization(userId);
 
         if (organization) {
           setHasOrganization(true);

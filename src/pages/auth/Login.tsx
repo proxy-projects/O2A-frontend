@@ -6,7 +6,7 @@ import Input from "../../components/ui/Input/Input";
 import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../../context/AuthContext";
 import { useState } from "react";
-import { supabase } from "../../config/supabaseClient";
+import { fetchUserData, getSession } from "../../api/api";
 
 const loginSchema = z.object({
   email: z.string().email("Provide a valid email address"),
@@ -21,7 +21,7 @@ const loginSchema = z.object({
 
 type LoginData = z.infer<typeof loginSchema>;
 
-function Login() {
+export default function Login() {
   const navigate = useNavigate();
   const [error, setError] = useState<string>("");
   const {
@@ -42,14 +42,9 @@ function Login() {
       const result = await login(data.email, data.password);
 
       if(result.success) {
-
-        const { data: { session }} = await supabase.auth.getSession();
+        const { data: { session }} = await getSession();
         
-        const { data: userData, error } = await supabase
-          .from("users")
-          .select()
-          .eq("user_id", session?.user?.id)
-          .single();
+        const { data: userData, error } = await fetchUserData(session?.user?.id);
 
         if (error) {
           throw error;
@@ -115,5 +110,3 @@ function Login() {
     </div>
   );
 }
-
-export default Login;

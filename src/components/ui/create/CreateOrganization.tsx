@@ -3,9 +3,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
-import { supabase } from "../../../config/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import { UserAuth } from "../../../context/AuthContext";
+import { createUser, createOrganization, updateOrganization } from '../../../api/api';
 
 const organizationSchema = z.object({
   name: z
@@ -38,38 +38,21 @@ function CreateOrganization() {
 
   const onSubmit = async (organizationData: OrganizationFormData) => {
     try {
-      const { data: userData } = await supabase
-        .from("users")
-        .select("organization_id")
-        .eq("user_id", session.user.id)
-        .single();
+      const { data: userData } = await createUser(session);
 
       if (userData?.organization_id) {
         console.error("User already has an organization");
         return;
       }
 
-      const { data: orgData, error: orgError } = await supabase
-        .from("organizations")
-        .insert([
-          {
-            organization_name: organizationData.name,
-            organization_description: organizationData.description,
-            created_by: session.user.id,
-          },
-        ])
-        .select()
-        .single();
+      const { data: orgData, error: orgError } = await createOrganization(organizationData, session.user.id);
 
       if (orgError) {
         console.error("Enter organization data", orgError);
         return;
       }
 
-      const { error: updateError } = await supabase
-        .from("users")
-        .update({ organization_id: orgData.id })
-        .eq("user_id", session.user.id);
+      const { error: updateError } = await updateOrganization(orgData.id, session.user.id);
 
       if (updateError) {
         console.error("Error updating  user's organization:", updateError);
