@@ -3,7 +3,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
-import { supabase } from "../../../config/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import { UserAuth } from "../../../context/AuthContext";
 import { createUser, createOrganization, updateOrganization } from '../../../api/api';
