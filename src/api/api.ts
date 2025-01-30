@@ -53,7 +53,14 @@ export const submitForm = async (
   currentUserId: string,
   formData: { title: string; description: string }
 ) => {
-  return await supabase
+  console.log('Inserting form data:', {
+    organization_id: organizationId,
+    created_by: currentUserId,
+    title: formData.title,
+    description: formData.description,
+  });
+
+  const { data, error } = await supabase
     .from("forms")
     .insert([
       {
@@ -63,5 +70,25 @@ export const submitForm = async (
         description: formData.description,
       },
     ])
+    .single();
+
+    if(data) {
+      console.log("data", data)
+    }
+
+  if (error) {
+    console.error('Error inserting form:', error);
+  }
+
+  return { data, error };
+};
+
+export const addInputToForm  = async () => {}
+
+export const fetchFormData = async (formId: string) => {
+  return await supabase
+    .from("forms")
+    .select("title, description")
+    .eq("id", formId)
     .single();
 };

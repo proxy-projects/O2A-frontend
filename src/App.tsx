@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import InfoForm from "./components/ui/InfoForm/InfoForm";
 import QRCodePage from "./components/ui/QrCode/QrCode";
 import Login from "./pages/auth/Login";
 import SignUp from "./pages/auth/SignUp";
@@ -11,7 +10,8 @@ import Profile from "./pages/organization/profile/Profile";
 import Today from "./pages/organization/dashboard/Today";
 import CheckedIn from "./pages/organization/dashboard/CheckedIn";
 import CheckedOut from "./pages/organization/dashboard/CheckedOut";
-import OrganizationForm from "./pages/organization/OrganizationForm/OrganizationForm";
+import OrganizationForm from "./pages/organization/OrganizationForm/CreateOrganizationForm";
+import FormPage from "./pages/organization/OrganizationForm/FormPage";
 
 
 const App: React.FC = () => {
@@ -66,11 +66,19 @@ const App: React.FC = () => {
             </ProtectedRoute>
           }
         />
-        <Route
+        {/* <Route
           path="/form/:organizationId"
           element={
             <ProtectedRoute>
-              <InfoForm />
+              <FormPage />
+            </ProtectedRoute>
+          }
+        /> */}
+        <Route
+          path="/form/:id"
+          element={
+            <ProtectedRoute>
+              <FormPage />
             </ProtectedRoute>
           }
         />
