@@ -2,9 +2,9 @@ import { useParams } from "react-router-dom";
 import { fetchFormData } from "../../../api/api";
 import { useEffect, useState } from "react";
 import Spinner from "../../../components/ui/Spinner/Spinner";
-import { Button, IconButton, Stack } from "@mui/material";
-import { DeleteIcon } from "lucide-react";
-import { AddCircle, AddTask, RemoveCircle } from "@mui/icons-material";
+import { IconButton, Stack, Tooltip } from "@mui/material";
+import { AddCircle, RemoveCircle } from "@mui/icons-material";
+import AddInputs from "../../../components/ui/AddInputs/AddInputs";
 
 interface FormData {
   title: string;
@@ -13,8 +13,13 @@ interface FormData {
 
 function FormPage() {
   const [formData, setFormData] = useState<FormData | null>();
+  const [isInputVisible, setIsInputVisible] = useState<boolean>(false);
 
   const { id } = useParams();
+
+  const showInputs = async () => {
+    setIsInputVisible(true);
+  };
 
   useEffect(() => {
     const getFormData = async () => {
@@ -30,26 +35,48 @@ function FormPage() {
   }
 
   return (
-<div className="flex items-start justify-center min-h-screen bg-gray-50 pt-10 space-x-2">
-  <div className="max-w-xl w-1/2 border rounded-lg shadow-lg bg-white p-8 space-y-6">
-    <h1 className="text-center text-3xl font-bold text-gray-800 mb-4">
-      {formData?.title}
-    </h1>
-    <p className="text-center text-gray-600 text-lg leading-relaxed">
-      {formData?.description}
-    </p>
-   
-  </div>
- <Stack direction="column" spacing={1}>
-    <IconButton aria-label="add input" color="success">
-      <AddCircle />
-    </IconButton>
-    <IconButton aria-label="delete form" color="secondary">
-      <RemoveCircle />
-    </IconButton>
- </Stack>
-</div>
+    <div className="flex flex-col items-center min-h-screen bg-gradient-to-b from-gray-100 to-white py-12 px-4 sm:px-6 lg:px-8">
+      <div className="w-3/4 max-w-4xl mx-auto">
+        <div className="relative flex items-center bg-gray-500 rounded-lg p-6">
+          <div className="flex-1 max-w-xl w-full border rounded-xl shadow-xl bg-white p-8 space-y-6  transition-shadow duration-300">
+            <h1 className="text-center text-3xl font-bold text-gray-900 mb-4 tracking-tight">
+              {formData?.title}
+            </h1>
+            <p className="text-center text-gray-700 text-lg leading-relaxed font-medium">
+              {formData?.description}
+            </p>
+          </div>
 
+          <Stack direction="column" className="absolute -right-16 space-y-3">
+            <Tooltip title="Add input" placement="right">
+              <IconButton
+                aria-label="add input"
+                color="success"
+                className="hover:scale-110 transition-transform duration-200"
+                onClick={showInputs}
+              >
+                <AddCircle />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="delete form" placement="right">
+              <IconButton
+                aria-label="delete form"
+                color="secondary"
+                className="hover:scale-110 transition-transform duration-200"
+              >
+                <RemoveCircle />
+              </IconButton>
+            </Tooltip>
+          </Stack>
+        </div>
+
+        {isInputVisible && (
+          <div className="w-full mt-8 p-4 bg-white shadow-md">
+            <AddInputs setIsInputVisible={setIsInputVisible} formId={id}/>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 

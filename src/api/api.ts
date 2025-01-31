@@ -1,3 +1,4 @@
+import { AddInputsData } from "../components/ui/AddInputs/AddInputs";
 import { supabase } from "../config/supabaseClient";
 
 export const createUser = async (session: any) => {
@@ -75,4 +76,31 @@ export const fetchFormData = async (formId?: string) => {
     .select("title, description")
     .eq("id", formId)
     .single();
+};
+
+
+export const addFormInput = async (formId: string, data: AddInputsData) => {
+  const { data: maxOrderData, error: maxOrderError } = await supabase
+    .from("form_inputs")
+    .select("input_order")
+    .eq("form_id", formId)
+    .order("input_order", { ascending: false })
+    .limit(1);
+
+  if (maxOrderError) throw maxOrderError;
+
+  const newOrder = maxOrderData && maxOrderData.length > 0 ? maxOrderData[0].input_order + 1 : 1;
+
+  const { error: addInputError } = await supabase
+    .from("form_inputs")
+    .insert([
+      {
+        form_id: formId,
+        label: data.labelInput,
+        placeholder: data.placeholderInput,
+        input_order: newOrder,
+      },
+    ]);
+
+  if (addInputError) throw addInputError;
 };
