@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Close } from "@mui/icons-material";
 import { useState } from "react";
 import { addFormInput } from "../../../api/api";
+import { useNavigate } from "react-router-dom";
 
 interface AddInputsProps {
   setIsInputVisible: (visible: boolean) => void;
@@ -28,7 +29,7 @@ const useSnackbar = () => {
   });
 
   const handleSnackbarClose = (_event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') return;
+    if (reason === 'click away') return;
     setSnackbar(prev => ({ ...prev, open: false }));
   };
 
@@ -38,6 +39,7 @@ const useSnackbar = () => {
 function AddInputs({ setIsInputVisible, formId }: AddInputsProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const { snackbar, setSnackbar, handleSnackbarClose } = useSnackbar();
+  const navigate  = useNavigate();
 
   const { control, handleSubmit, reset, formState: { errors } } = useForm({
     resolver: zodResolver(schema),
@@ -49,7 +51,6 @@ function AddInputs({ setIsInputVisible, formId }: AddInputsProps) {
   const showSuccessAndClose = () => {
     setSnackbar({ open: true, message: "Input added successfully!", severity: "success" });
     reset({ labelInput: "", placeholderInput: "" });
-    setTimeout(handleClose, SNACKBAR_DURATION);
   };
 
   const onSubmit = async (data: AddInputsData) => {
@@ -57,6 +58,9 @@ function AddInputs({ setIsInputVisible, formId }: AddInputsProps) {
       setLoading(true);
       await addFormInput(formId!, data);
       showSuccessAndClose();
+      setTimeout(() => {
+        navigate(0);
+      }, SNACKBAR_DURATION);
     } catch (error) {
       console.error("Error adding input:", error);
       setSnackbar({ open: true, message: "An unexpected error occurred", severity: "error" });
