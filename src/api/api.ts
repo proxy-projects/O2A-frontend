@@ -71,13 +71,20 @@ export const submitForm = async (
 export const addInputToForm = async () => {};
 
 export const fetchFormData = async (formId?: string) => {
-  return await supabase
+  const { data: formInputsData, error: formInputsError } = await supabase
+    .from("form_inputs")
+    .select()
+    .order("input_order", {ascending: true})
+    .eq("form_id", formId);
+
+  const { data: formInfoData, error: formInfoError } = await supabase
     .from("forms")
     .select("title, description")
     .eq("id", formId)
     .single();
-};
 
+  return {formInputsData, formInfoData, formInputsError, formInfoError} 
+  }
 
 export const addFormInput = async (formId: string, data: AddInputsData) => {
   const { data: maxOrderData, error: maxOrderError } = await supabase
@@ -89,18 +96,19 @@ export const addFormInput = async (formId: string, data: AddInputsData) => {
 
   if (maxOrderError) throw maxOrderError;
 
-  const newOrder = maxOrderData && maxOrderData.length > 0 ? maxOrderData[0].input_order + 1 : 1;
+  const newOrder =
+    maxOrderData && maxOrderData.length > 0
+      ? maxOrderData[0].input_order + 1
+      : 1;
 
-  const { error: addInputError } = await supabase
-    .from("form_inputs")
-    .insert([
-      {
-        form_id: formId,
-        label: data.labelInput,
-        placeholder: data.placeholderInput,
-        input_order: newOrder,
-      },
-    ]);
+  const { error: addInputError } = await supabase.from("form_inputs").insert([
+    {
+      form_id: formId,
+      label: data.labelInput,
+      placeholder: data.placeholderInput,
+      input_order: newOrder,
+    },
+  ]);
 
   if (addInputError) throw addInputError;
 };
