@@ -79,7 +79,7 @@ function FormPage() {
           </Stack>
         </div>
 
-        <div className="flex flex-col py-4 border">
+        <div className="flex flex-col py-4">
           {formInputsData?.map((input, index) => (
             <div className="w-full" key={index}>
               <TextField
