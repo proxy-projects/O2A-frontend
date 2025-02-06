@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { fetchFormData } from "../../../api/api";
 import { useEffect, useState } from "react";
 import Spinner from "../../../components/ui/Spinner/Spinner";
-import { IconButton, Stack, Tooltip } from "@mui/material";
+import { IconButton, Stack, TextField, Tooltip } from "@mui/material";
 import { AddCircle, RemoveCircle } from "@mui/icons-material";
 import AddInputs from "../../../components/ui/AddInputs/AddInputs";
 
@@ -11,8 +11,16 @@ interface FormData {
   description: string;
 }
 
+interface FormInputsData {
+  label: string;
+  placeholder: string;
+}
+
 function FormPage() {
   const [formData, setFormData] = useState<FormData | null>();
+  const [formInputsData, setFormInputsData] = useState<
+    FormInputsData[] | null
+  >();
   const [isInputVisible, setIsInputVisible] = useState<boolean>(false);
 
   const { id } = useParams();
@@ -23,8 +31,9 @@ function FormPage() {
 
   useEffect(() => {
     const getFormData = async () => {
-      const { data } = await fetchFormData(id);
-      setFormData(data);
+      const { formInfoData, formInputsData } = await fetchFormData(id);
+      setFormData(formInfoData);
+      setFormInputsData(formInputsData);
     };
 
     getFormData();
@@ -70,9 +79,24 @@ function FormPage() {
           </Stack>
         </div>
 
+        <div className="flex flex-col py-4 border">
+          {formInputsData?.map((input, index) => (
+            <div className="w-full" key={index}>
+              <TextField
+                id="outlined-disabled"
+                label={input.label}
+                placeholder={input.placeholder}
+                sx={{ my: 1.5, width: '100%' }}
+                defaultValue={input.placeholder}
+                disabled
+              />
+            </div>
+          ))}
+        </div>
+
         {isInputVisible && (
           <div className="w-full mt-8 p-4 bg-white shadow-md">
-            <AddInputs setIsInputVisible={setIsInputVisible} formId={id}/>
+            <AddInputs setIsInputVisible={setIsInputVisible} formId={id} />
           </div>
         )}
       </div>
