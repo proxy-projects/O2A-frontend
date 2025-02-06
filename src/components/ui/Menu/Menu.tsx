@@ -58,6 +58,7 @@ export default function AccountMenu() {
           padding: "0 16px",
           backgroundColor: "white",
           boxShadow: "0 1px 3px 0 rgb(0 0 0 / 0.1)",
+          cursor: "pointer",
         }}
       >
         <Tooltip title="Organization settings">
