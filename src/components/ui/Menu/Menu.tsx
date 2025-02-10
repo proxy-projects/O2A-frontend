@@ -1,4 +1,5 @@
-import * as React from "react";
+import { useNavigate } from "react-router-dom";
+import { Fragment, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
@@ -9,22 +10,26 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Logout from "@mui/icons-material/Logout";
-import QrCode  from "@mui/icons-material/QrCode";
+import QrCode from "@mui/icons-material/QrCode";
 import { BookText } from "lucide-react";
 
 import { UserAuth } from "../../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { fetchAllForms, fetchOrganization } from "../../../api/api";
 
 export default function AccountMenu() {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [isFormExist, setIsFormExist] = useState<boolean>(false);
+
   const { logout, session } = UserAuth();
+
   const open = Boolean(anchorEl);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+
+  const handleClose = async () => {
     setAnchorEl(null);
   };
 
@@ -37,17 +42,50 @@ export default function AccountMenu() {
   };
 
   const navigateToProfile = () => {
-    navigate('/profile')
-  }
+    navigate("/profile");
+  };
 
   const navigateToCreateForm = () => {
-    navigate('/create-form');
-  }
+    navigate("/create-form");
+  };
 
-  const user = session?.user?.user_metadata?.display_name
+
+
+const checkOrganizationForm = async () => {
+  try {
+    const organization = await fetchOrganization(session?.user?.id);
+    const { formsData } = await fetchAllForms(organization.data?.id);
+    return { formsData, error: null };
+  } catch (error) {
+    return { formsData: null, error };
+  }
+};
+
+const navigateToForm = async () => {
+  const { formsData, error } = await checkOrganizationForm();
+  if (formsData?.id) {
+    navigate(`/form/${formsData.id}`);
+  } else {
+    console.error(error)
+  }
+};
+
+useEffect(() => {
+  const checkExistingForm = async () => {
+    const { formsData } = await checkOrganizationForm();
+    if (formsData?.id) {
+      setIsFormExist(true);
+    }
+  };
+
+  checkExistingForm();
+}, []);
+
+
+  const user = session?.user?.user_metadata?.display_name;
 
   return (
-    <React.Fragment>
+    <Fragment>
       <Box
         sx={{
           display: "flex",
@@ -65,7 +103,7 @@ export default function AccountMenu() {
           <IconButton
             onClick={handleClick}
             size="small"
-            sx={{ ml: 2}}
+            sx={{ ml: 2 }}
             aria-controls={open ? "account-menu" : undefined}
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
@@ -127,12 +165,21 @@ export default function AccountMenu() {
           </ListItemIcon>
           Get QR Code
         </MenuItem>
-        <MenuItem onClick={navigateToCreateForm}>
-          <ListItemIcon>
-            <BookText fontSize="small" />
-          </ListItemIcon>
-          Create Form
-        </MenuItem>
+        {isFormExist ? (
+          <MenuItem onClick={navigateToForm}>
+            <ListItemIcon>
+              <BookText fontSize="small" />
+            </ListItemIcon>
+            Edit Form
+          </MenuItem>
+        ) : (
+          <MenuItem onClick={navigateToCreateForm}>
+            <ListItemIcon>
+              <BookText fontSize="small" />
+            </ListItemIcon>
+            Create Form
+          </MenuItem>
+        )}
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />
@@ -140,6 +187,6 @@ export default function AccountMenu() {
           Logout
         </MenuItem>
       </Menu>
-    </React.Fragment>
+    </Fragment>
   );
 }
