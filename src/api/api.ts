@@ -1,5 +1,17 @@
+import { PostgrestError } from "@supabase/supabase-js";
 import { AddInputsData } from "../components/ui/AddInputs/AddInputs";
 import { supabase } from "../config/supabaseClient";
+
+type FormResponse = {
+  data: {
+    id: string;
+    organization_id: string;
+    created_by: string;
+    title: string;
+    description: string;
+  } | null;
+  error: PostgrestError | null;
+}
 
 export const createUser = async (session: any) => {
   return await supabase
@@ -16,6 +28,8 @@ export const getSession = async () => {
 export const fetchUserData = async (userId?: string) => {
   return await supabase.from("users").select().eq("user_id", userId).single();
 };
+
+// organization
 
 export const createOrganization = async (
   organizationData: { name: string; description?: string },
@@ -44,17 +58,45 @@ export const updateOrganization = async (orgId: string, userId: string) => {
 export const fetchOrganization = async (userId: string) => {
   return await supabase
     .from("organizations")
-    .select("id")
+    .select("id, organization_name, form_id")
     .eq("created_by", userId)
     .single();
+};
+
+// forms
+
+export const fetchAllForms = async (organizationId: String) => {
+  const { data: formsData, error: formsError } = await supabase
+    .from("forms")
+    .select()
+    .eq("organization_id", organizationId)
+    .single();
+
+  return { formsData, formsError };
 };
 
 export const submitForm = async (
   organizationId: string,
   currentUserId: string,
   formData: { title: string; description: string }
-) => {
-  return await supabase
+): Promise<FormResponse> => {
+  // First check if the organization already has a form
+  const { data: existingForm, error: checkError } = await supabase
+    .from("forms")
+    .select()
+    .eq("organization_id", organizationId)
+    .single();
+
+  if (checkError && checkError.code !== 'PGRST116') {
+    return { data: null, error: checkError };
+  }
+
+  if (existingForm) {
+    return { data: existingForm, error: null };
+  }
+
+  // Create a new form
+  const { data, error } = await supabase
     .from("forms")
     .insert([
       {
@@ -66,7 +108,10 @@ export const submitForm = async (
     ])
     .select()
     .single();
+
+  return { data, error };
 };
+
 
 export const addInputToForm = async () => {};
 
@@ -74,7 +119,7 @@ export const fetchFormData = async (formId?: string) => {
   const { data: formInputsData, error: formInputsError } = await supabase
     .from("form_inputs")
     .select()
-    .order("input_order", {ascending: true})
+    .order("input_order", { ascending: true })
     .eq("form_id", formId);
 
   const { data: formInfoData, error: formInfoError } = await supabase
@@ -83,8 +128,8 @@ export const fetchFormData = async (formId?: string) => {
     .eq("id", formId)
     .single();
 
-  return {formInputsData, formInfoData, formInputsError, formInfoError} 
-  }
+  return { formInputsData, formInfoData, formInputsError, formInfoError };
+};
 
 export const addFormInput = async (formId: string, data: AddInputsData) => {
   const { data: maxOrderData, error: maxOrderError } = await supabase
