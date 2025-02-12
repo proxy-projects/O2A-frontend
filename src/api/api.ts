@@ -1,5 +1,17 @@
+import { PostgrestError } from "@supabase/supabase-js";
 import { AddInputsData } from "../components/ui/AddInputs/AddInputs";
 import { supabase } from "../config/supabaseClient";
+
+type FormResponse = {
+  data: {
+    id: string;
+    organization_id: string;
+    created_by: string;
+    title: string;
+    description: string;
+  } | null;
+  error: PostgrestError | null;
+}
 
 export const createUser = async (session: any) => {
   return await supabase
@@ -67,35 +79,37 @@ export const submitForm = async (
   organizationId: string,
   currentUserId: string,
   formData: { title: string; description: string }
-) => {
+): Promise<FormResponse> => {
   // First check if the organization already has a form
-  const { data: existingForm, error:  checkError } = await supabase
+  const { data: existingForm, error: checkError } = await supabase
     .from("forms")
     .select()
     .eq("organization_id", organizationId)
     .single();
 
-  // If there's already a form, return it
+  if (checkError && checkError.code !== 'PGRST116') {
+    return { data: null, error: checkError };
+  }
+
   if (existingForm) {
     return { data: existingForm, error: null };
   }
 
-  // If no form exists, create a new one
-  if (!existingForm) {
-    const {data, error} = await supabase
-      .from("forms")
-      .insert([
-        {
-          organization_id: organizationId,
-          created_by: currentUserId,
-          title: formData.title,
-          description: formData.description,
-        },
-      ])
-      .select()
-      .single();
-    return {data, error}
-  }
+  // Create a new form
+  const { data, error } = await supabase
+    .from("forms")
+    .insert([
+      {
+        organization_id: organizationId,
+        created_by: currentUserId,
+        title: formData.title,
+        description: formData.description,
+      },
+    ])
+    .select()
+    .single();
+
+  return { data, error };
 };
 
 
