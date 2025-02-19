@@ -2,7 +2,7 @@ import React from "react";
 import { QRCodeCanvas } from "qrcode.react";
 
 interface QrCodeProps {
-  organizationId: string;
+  organizationId?: string;
 }
 
 const QRCode: React.FC<QrCodeProps> = ({ organizationId }) => {
