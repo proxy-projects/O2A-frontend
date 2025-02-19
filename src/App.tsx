@@ -11,7 +11,7 @@ import CheckedIn from "./pages/organization/dashboard/CheckedIn";
 import CheckedOut from "./pages/organization/dashboard/CheckedOut";
 import OrganizationForm from "./pages/organization/OrganizationForm/CreateOrganizationForm";
 import FormPage from "./pages/organization/OrganizationForm/FormPage";
-import GetStarted from "./pages/organization/GetStarted/GetStarted";
+import GetStarted from "./pages/organization/getstarted/GetStarted";
 
 
 const App: React.FC = () => {
