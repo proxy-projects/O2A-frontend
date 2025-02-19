@@ -4,7 +4,7 @@ import QRCodePage from "./components/ui/QrCode/QrCode";
 import Login from "./pages/auth/Login";
 import SignUp from "./pages/auth/SignUp";
 import Dashboard from "./pages/organization/dashboard/Dashboard";
-import GetStarted from "./pages/organization/getstarted/GetStarted";
+import GetStarted from "./pages/organization/getStarted/GetStarted";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import Profile from "./pages/organization/profile/Profile";
 import Today from "./pages/organization/dashboard/Today";
