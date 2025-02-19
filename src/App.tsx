@@ -4,7 +4,6 @@ import QRCodePage from "./components/ui/QrCode/QrCode";
 import Login from "./pages/auth/Login";
 import SignUp from "./pages/auth/SignUp";
 import Dashboard from "./pages/organization/dashboard/Dashboard";
-import GetStarted from "./pages/organization/getStarted/GetStarted";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import Profile from "./pages/organization/profile/Profile";
 import Today from "./pages/organization/dashboard/Today";
@@ -12,6 +11,7 @@ import CheckedIn from "./pages/organization/dashboard/CheckedIn";
 import CheckedOut from "./pages/organization/dashboard/CheckedOut";
 import OrganizationForm from "./pages/organization/OrganizationForm/CreateOrganizationForm";
 import FormPage from "./pages/organization/OrganizationForm/FormPage";
+import GetStarted from "./pages/organization/getStarted/GetStarted";
 
 
 const App: React.FC = () => {
