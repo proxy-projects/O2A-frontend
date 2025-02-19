@@ -12,6 +12,7 @@ import OrganizationForm from "./pages/organization/OrganizationForm/CreateOrgani
 import FormPage from "./pages/organization/OrganizationForm/FormPage";
 import GetStarted from "./pages/organization/getstarted/GetStarted";
 import QRCode from "./components/ui/QrCode/QrCode";
+import UserForm from "./pages/user/UserForm";
 
 const App: React.FC = () => {
   return (
@@ -74,6 +75,8 @@ const App: React.FC = () => {
             </ProtectedRoute>
           }
         />
+
+        <Route  path="/organization/:organizationId/form" element= {<UserForm/>} />
 
         <Route path="*" element={<div>page not found</div>} />
       </Routes>
