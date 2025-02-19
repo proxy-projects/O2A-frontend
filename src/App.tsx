@@ -59,14 +59,6 @@ const App: React.FC = () => {
             </ProtectedRoute>
           }
         />
-        {/* <Route
-          path="/form/:organizationId"
-          element={
-            <ProtectedRoute>
-              <FormPage />
-            </ProtectedRoute>
-          }
-        /> */}
         <Route
           path="/form/:id"
           element={
