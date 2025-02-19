@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import QRCodePage from "./components/ui/QrCode/QrCode";
 import Login from "./pages/auth/Login";
 import SignUp from "./pages/auth/SignUp";
 import Dashboard from "./pages/organization/dashboard/Dashboard";
@@ -12,7 +11,7 @@ import CheckedOut from "./pages/organization/dashboard/CheckedOut";
 import OrganizationForm from "./pages/organization/OrganizationForm/CreateOrganizationForm";
 import FormPage from "./pages/organization/OrganizationForm/FormPage";
 import GetStarted from "./pages/organization/getstarted/GetStarted";
-
+import QRCode from "./components/ui/QrCode/QrCode";
 
 const App: React.FC = () => {
   return (
@@ -21,14 +20,7 @@ const App: React.FC = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
 
-        <Route
-          path="/qr-code"
-          element={
-            <ProtectedRoute>
-              <QRCodePage />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/qr-code" element={<QRCode />} />
         <Route
           path="/"
           element={
@@ -50,7 +42,7 @@ const App: React.FC = () => {
           <Route path="checked-in" element={<CheckedIn />} />
           <Route path="checked-out" element={<CheckedOut />} />
         </Route>
-          <Route
+        <Route
           path="/profile"
           element={
             <ProtectedRoute>
@@ -62,7 +54,7 @@ const App: React.FC = () => {
           path="/create-form"
           element={
             <ProtectedRoute>
-              <OrganizationForm/>
+              <OrganizationForm />
             </ProtectedRoute>
           }
         />
