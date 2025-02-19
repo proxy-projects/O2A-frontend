@@ -1,10 +1,15 @@
 import { useParams } from "react-router-dom";
-import { fetchFormData } from "../../../api/api";
+import {
+  getOrganizationForm,
+  fetchFormData,
+  fetchOrganization,
+} from "../../../api/api";
 import { useEffect, useState } from "react";
 import Spinner from "../../../components/ui/Spinner/Spinner";
 import { IconButton, Stack, TextField, Tooltip } from "@mui/material";
 import { AddCircle, RemoveCircle } from "@mui/icons-material";
 import AddInputs from "../../../components/ui/AddInputs/AddInputs";
+import { UserAuth } from "../../../context/AuthContext";
 
 interface FormData {
   title: string;
@@ -25,6 +30,8 @@ function FormPage() {
 
   const { id } = useParams();
 
+  const { session } = UserAuth();
+
   const showInputs = async () => {
     setIsInputVisible(true);
   };
@@ -32,6 +39,11 @@ function FormPage() {
   useEffect(() => {
     const getFormData = async () => {
       const { formInfoData, formInputsData } = await fetchFormData(id);
+      const { data } = await fetchOrganization(session?.user.id);
+
+      const { formsData } = await getOrganizationForm(data?.id);
+      const formData = await fetchFormData(formsData.id);
+      console.log(formData);
       setFormData(formInfoData);
       setFormInputsData(formInputsData);
     };
@@ -86,7 +98,7 @@ function FormPage() {
                 id="outlined-disabled"
                 label={input.label}
                 placeholder={input.placeholder}
-                sx={{ my: 1.5, width: '100%' }}
+                sx={{ my: 1.5, width: "100%" }}
                 defaultValue={input.placeholder}
                 disabled
               />

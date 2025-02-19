@@ -14,7 +14,7 @@ import QrCode from "@mui/icons-material/QrCode";
 import { BookText } from "lucide-react";
 
 import { UserAuth } from "../../../context/AuthContext";
-import { fetchAllForms, fetchOrganization } from "../../../api/api";
+import { getOrganizationForm, fetchOrganization } from "../../../api/api";
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -49,38 +49,35 @@ export default function AccountMenu() {
     navigate("/create-form");
   };
 
-
-
-const checkOrganizationForm = async () => {
-  try {
-    const organization = await fetchOrganization(session?.user?.id);
-    const { formsData } = await fetchAllForms(organization.data?.id);
-    return { formsData, error: null };
-  } catch (error) {
-    return { formsData: null, error };
-  }
-};
-
-const navigateToForm = async () => {
-  const { formsData, error } = await checkOrganizationForm();
-  if (formsData?.id) {
-    navigate(`/form/${formsData.id}`);
-  } else {
-    console.error(error)
-  }
-};
-
-useEffect(() => {
-  const checkExistingForm = async () => {
-    const { formsData } = await checkOrganizationForm();
-    if (formsData?.id) {
-      setIsFormExist(true);
+  const checkOrganizationForm = async () => {
+    try {
+      const organization = await fetchOrganization(session?.user?.id);
+      const { formsData } = await getOrganizationForm(organization.data?.id);
+      return { formsData, error: null };
+    } catch (error) {
+      return { formsData: null, error };
     }
   };
 
-  checkExistingForm();
-}, []);
+  const navigateToForm = async () => {
+    const { formsData, error } = await checkOrganizationForm();
+    if (formsData?.id) {
+      navigate(`/form/${formsData.id}`);
+    } else {
+      console.error(error);
+    }
+  };
 
+  useEffect(() => {
+    const checkExistingForm = async () => {
+      const { formsData } = await checkOrganizationForm();
+      if (formsData?.id) {
+        setIsFormExist(true);
+      }
+    };
+
+    checkExistingForm();
+  }, []);
 
   const user = session?.user?.user_metadata?.display_name;
 
