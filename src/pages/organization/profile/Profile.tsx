@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form"; // Add this import
-import { AlertCircle, Download, Upload } from "lucide-react";
+import { Download, Upload } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -14,6 +14,9 @@ import { Textarea } from "../../../components/ui/TextArea/TextArea";
 import Input from "../../../components/ui/Input/Input";
 import { Label } from "../../../components/ui/Label/Label";
 import Button from "../../../components/ui/Button/Button";
+import QRCode from "../../../components/ui/QrCode/QrCode";
+import { UserAuth } from "../../../context/AuthContext";
+import { fetchOrganization } from "../../../api/api";
 
 // Define your form data type
 interface FormData {
@@ -25,6 +28,9 @@ interface FormData {
 
 export default function Profile() {
   const [isEdited, setIsEdited] = useState(false);
+  const [organizationId, setOrganizationId] = useState<string>("");
+
+  const { session } = UserAuth();
 
   // Initialize react-hook-form
   const { control } = useForm<FormData>({
@@ -46,6 +52,15 @@ export default function Profile() {
       "Leading provider of innovative solutions for businesses worldwide.",
     logo: "https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=",
   };
+
+  useEffect(() => {
+    const getOrganizationData = async () => {
+      const { data } = await fetchOrganization(session?.user.id);
+      setOrganizationId(data?.id);
+    };
+
+    getOrganizationData();
+  }, []);
 
   return (
     <div className="container mx-auto py-10">
@@ -101,7 +116,9 @@ export default function Profile() {
             </div>
             <div className="mt-8 flex justify-end space-x-4">
               <Button className="bg-gray-200">Cancel</Button>
-              <Button className="bg-gray-200" disabled={!isEdited}>Save Changes</Button>
+              <Button className="bg-gray-200" disabled={!isEdited}>
+                Save Changes
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -136,8 +153,10 @@ export default function Profile() {
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col items-center space-y-4">
-              <div className="w-32 h-32 bg-muted flex items-center justify-center">
-                <AlertCircle className="h-12 w-12 text-muted-foreground" />
+              <div className="w-64 h-64 bg-muted flex items-center justify-between p-4">
+                <div>
+                  <QRCode organizationId={organizationId} />
+                </div>
               </div>
               <Button className="hover:bg-gray-100 transition-all ease-in-out">
                 <Download className="mr-2 h-4 w-4" /> Download QR Code

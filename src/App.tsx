@@ -1,10 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import QRCodePage from "./components/ui/QrCode/QrCode";
 import Login from "./pages/auth/Login";
 import SignUp from "./pages/auth/SignUp";
 import Dashboard from "./pages/organization/dashboard/Dashboard";
-import GetStarted from "./pages/organization/getstarted/GetStarted";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import Profile from "./pages/organization/profile/Profile";
 import Today from "./pages/organization/dashboard/Today";
@@ -12,7 +10,9 @@ import CheckedIn from "./pages/organization/dashboard/CheckedIn";
 import CheckedOut from "./pages/organization/dashboard/CheckedOut";
 import OrganizationForm from "./pages/organization/OrganizationForm/CreateOrganizationForm";
 import FormPage from "./pages/organization/OrganizationForm/FormPage";
-
+import GetStarted from "./pages/organization/getstarted/GetStarted";
+import QRCode from "./components/ui/QrCode/QrCode";
+import UserForm from "./pages/user/UserForm";
 
 const App: React.FC = () => {
   return (
@@ -21,14 +21,7 @@ const App: React.FC = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
 
-        <Route
-          path="/qr-code"
-          element={
-            <ProtectedRoute>
-              <QRCodePage />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/qr-code" element={<QRCode />} />
         <Route
           path="/"
           element={
@@ -50,7 +43,7 @@ const App: React.FC = () => {
           <Route path="checked-in" element={<CheckedIn />} />
           <Route path="checked-out" element={<CheckedOut />} />
         </Route>
-          <Route
+        <Route
           path="/profile"
           element={
             <ProtectedRoute>
@@ -62,18 +55,10 @@ const App: React.FC = () => {
           path="/create-form"
           element={
             <ProtectedRoute>
-              <OrganizationForm/>
+              <OrganizationForm />
             </ProtectedRoute>
           }
         />
-        {/* <Route
-          path="/form/:organizationId"
-          element={
-            <ProtectedRoute>
-              <FormPage />
-            </ProtectedRoute>
-          }
-        /> */}
         <Route
           path="/form/:id"
           element={
@@ -82,6 +67,8 @@ const App: React.FC = () => {
             </ProtectedRoute>
           }
         />
+
+        <Route  path="/organization/:organizationId/form" element= {<UserForm/>} />
 
         <Route path="*" element={<div>page not found</div>} />
       </Routes>

@@ -11,7 +11,7 @@ type FormResponse = {
     description: string;
   } | null;
   error: PostgrestError | null;
-}
+};
 
 export const createUser = async (session: any) => {
   return await supabase
@@ -35,7 +35,7 @@ export const createOrganization = async (
   organizationData: { name: string; description?: string },
   userId: string
 ) => {
-  return await supabase
+  const response = await supabase
     .from("organizations")
     .insert([
       {
@@ -46,6 +46,8 @@ export const createOrganization = async (
     ])
     .select()
     .single();
+
+  return response;
 };
 
 export const updateOrganization = async (orgId: string, userId: string) => {
@@ -65,7 +67,7 @@ export const fetchOrganization = async (userId: string) => {
 
 // forms
 
-export const fetchAllForms = async (organizationId: String) => {
+export const getOrganizationForm = async (organizationId: String) => {
   const { data: formsData, error: formsError } = await supabase
     .from("forms")
     .select()
@@ -87,7 +89,7 @@ export const submitForm = async (
     .eq("organization_id", organizationId)
     .single();
 
-  if (checkError && checkError.code !== 'PGRST116') {
+  if (checkError && checkError.code !== "PGRST116") {
     return { data: null, error: checkError };
   }
 
@@ -111,7 +113,6 @@ export const submitForm = async (
 
   return { data, error };
 };
-
 
 export const addInputToForm = async () => {};
 
