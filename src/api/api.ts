@@ -158,3 +158,36 @@ export const addFormInput = async (formId: string, data: AddInputsData) => {
 
   if (addInputError) throw addInputError;
 };
+
+// Form submissions
+
+// generate submissionId
+export const generateSubmissionId = () => {
+  const date = new Date().toISOString().split("T")[0].replace(/-/g, "");
+  const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+  return `SUB-${date}-${random}`;
+};
+
+// submit form information
+export const submitFormData = async (organizationId: string, formData: any) => {
+  return await supabase.from("form_submissions").insert([
+    {
+      organization_id: organizationId,
+      submission_id: generateSubmissionId(),
+      form_data: formData,
+    },
+  ]);
+};
+
+// fetch submitted data per organization
+export const fetchTodaySubmissions = async (organizationId: string) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  return await supabase
+    .from("form_submissions")
+    .select("*")
+    .eq("organization_id", organizationId)
+    .gte("created_at", today.toISOString())
+    .order("created_at", { ascending: false });
+};
